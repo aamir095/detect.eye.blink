@@ -1,0 +1,101 @@
+import time
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from brainflow.board_shim import BoardShim, BrainFlowInputParams, LogLevels, BoardIds
+from brainflow.data_filter import DataFilter
+from scipy.signal import butter,filtfilt
+from statistics import mean
+import winsound
+frequency = 5000  # Set Frequency To 2500 Hertz
+duration = 100
+
+
+BoardShim.enable_dev_board_logger()
+
+ # use synthetic board for demo
+params = BrainFlowInputParams()
+params.serial_port = "COM3"
+
+board = BoardShim(BoardIds.GANGLION_BOARD.value, params)
+board.prepare_session()
+board.start_stream()
+
+   
+def power_line_filter(data):
+    cutoff = 10
+    order = 4
+    nyq = 100
+    wn=[40,70]
+    b, a = butter(order, wn, btype='stop', fs=200)
+    y = filtfilt(b, a, data)
+    return y    
+
+def bandpass_filter(data):
+    cutoff = 10
+    order = 4
+    nyq = 100
+    wn=[5,50]
+    b, a = butter(order, wn, btype='pass', fs=200)
+    y = filtfilt(b, a, data)
+    return y 
+
+
+
+def main():
+    
+    while True:
+
+        time.sleep(0.3)
+        # # data = board.get_current_board_data (256) # get latest 256 packages or less, doesnt remove them from internal buffer
+        # data = board.get_board_data()  # get all data and remove it from internal buffer
+        data = board.get_board_data()
+        #data = board.get_current_board_data (256)
+        df = pd.DataFrame(np.transpose(data))
+        #print('Data From the Board')
+        #print(df)
+        print('Data from channel 1')
+        channel1_raw= df.iloc[:,1] 
+        a = channel1_raw
+        a = bandpass_filter(a)
+        a = power_line_filter(a)
+        a = a- mean(a)
+        a=a/max(abs(a))
+        
+     
+        #determine eye blink
+        zero = np.zeros(len(a))
+        previous_signal=0
+        for i in range(0, len(a), 1):
+            signal = a[i]
+            if previous_signal >-0.4 and signal<-0.4:
+                zero[i] = -1
+                #winsound.Beep(frequency, duration)
+            elif previous_signal <0.4 and signal>0.4:
+                zero[i]=1
+                # winsound.Beep(frequency, duration)
+            previous_signal = signal    
+            
+        list_zero = zero.tolist()
+        print(list_zero)
+        count_one = list_zero.count(1.0)
+        print(count_one)
+        if count_one > 6:
+            winsound.Beep(frequency, duration)
+            print("Eye Blink is detected")
+        
+        else:
+            
+            print("No Blink Detected")
+        
+        
+        plt.subplot(1, 2, 1)
+        plt.plot(zero)
+        plt.subplot(1, 2, 2)
+        plt.plot(a)
+        
+        
+
+
+if __name__ == "__main__":
+    main()
