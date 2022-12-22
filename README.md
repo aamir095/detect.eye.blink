@@ -15,4 +15,20 @@ The brain-waves signals are extracted, and signal processed from BCI devices. Th
 ![dipole model of eyeball](https://user-images.githubusercontent.com/48818645/209179395-31efc0b4-5061-41fd-bfb9-4f4720533b25.PNG)
 
 
+## Proposed System
 
+Any human brain interface system consists of mainly four primary modules: data acquisition, pre-processing, feature extraction and classifier module. The followings are the techniques and methodology used in this research experiment. MATLAB and Python are the tools which were used to analyze and verify the results. Different classifications techniques were implemented in the python to find the accuracy. 
+
+### 1. Data Acquisition
+Emotive Headset and OPENBCI headwear is used. Each headset consists of an ear clip with electrodes. Data acquisition is a critical process, and one should acquire data that is free from external and internal artifacts. Bio-potentials collection methods can be classified into three categories: invasive, semi-invasive, and non-invasive [9]. The most invasive technique is called deep brain recording. In this case, a microelectrode is placed inside the skull and signals can be recorded from very well-defined locations. For semi-invasive little to no surgery is required to implant in the desired location. For non-invasive no surgery is required, simply it can be put in the skull readily and fast. The source of bio-potentials (neuron) is far in the case of non-invasive electrodes, this technique is more prone to error and signal loss.
+
+### 2. Signal processing
+The raw data from the headset which needs to be further processed. Extracting discriminative characteristics from EEG recordings may be a challenging task, due to the significant presence of artifacts in the acquired data [10]. Different physiologic artifacts like Alternating Current Artifact, Electrode Artifacts, Movements in Recording Environment, Interference of Other equipment, Electrocardiogram (ECG), Skin Artifact are present in the EEG signals [11].
+
+### 3. Feature Extraction
+Feature extraction is a process of dimensionality reduction by which an initial set of raw data is reduced to more manageable groups for processing. A characteristic of these large data sets has many variables that require a lot of computing resources to process. The eye blinks were extracted from EEG using the following criterion. Eye blink has the largest amplitude in EEG signal so can be detect easily [11][12]. Also, the amplitude of these peaks will be significantly higher compared to the rhythmic brain activity. An eye-blink signal can be detected by its positive and negative peak occurrences. By examining it was found that the positive peak of eye blink is always greater than 0.3 and the negative one is smaller than -0.3 (after normalization) [11]. The eye blink signals are characterized by high value of kurtosis coefficient, normally above the value 3 [11][13]. MATLAB was used to detect the peak and to analyze and determine whether the signal is eye blink or not. Only useful data was analyzed and passed into different techniques like Independent Component Analysis (ICA) and Machine Learning Algorithms to determine the signal a blink or not.
+
+### 3. Classification
+The design of classifier is a hot topic in EEG data processing and applications. Traditional methods for EEG classifier design face the challenge caused by high dimension of EEG data sets, thus the classification result may have large deviations. Small sample size problem of EEG could lead to the overfitting phenomenon, which limits the application of traditional classifier. In this research, I have applied different binary classifications like Random Forest Classifier, Gradient Boosting, and Logistic Algorithms to determine whether the EEG signal is associated with eye blink or not. The detailed explanation of these techniques is discussed in the following sections.
+
+## Experiment Setup and Results
