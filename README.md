@@ -84,3 +84,28 @@ EEG signal processing and application are applied to more and more fields. In th
 
 https://github.com/aamir095/eyeblink_dataset
 
+BCI hardware is used to get raw data from a person. With the help of Bluetooth, data can be transferred to a computer for further processing.
+
+![BCI device](https://user-images.githubusercontent.com/48818645/209194051-af8a8504-6ebb-4ad2-9894-d6ed4874b5d8.PNG)
+
+The raw data from the hardware has 15 columns. There are 4 electrode channels, 4 accelerometer data,s.n, and timestamp. The data of interest is channel 0 data and eye blink is determined with the help of that.
+
+![raw data from openbci](https://user-images.githubusercontent.com/48818645/209194629-9ec7678b-5016-4056-ac8e-bbc9982a6827.PNG)
+
+EXG channel 0 data is selected. The raw data is filtered with a series of 2 filters. The bandpass frequency is 5-50HZ. The notch filter (bandstop) frequency is 50-60 HZ.
+
+
+
+![raw and filtered data](https://user-images.githubusercontent.com/48818645/209195515-deb2429a-9800-4ba6-a22f-f1a1e1b4df63.PNG)
+
+The filtered data is normalized from [-1, +1] with zero mean. A signal greater than +0.4 and less than -0.4 is considered as an eye blink.
+
+
+![zero mean and comparison](https://user-images.githubusercontent.com/48818645/209196226-fa3c2132-70e3-4295-90c5-e37fc72d5358.PNG)
+
+
+Detecting a number of eye-blinking instances in a given data set.
+
+![eyeblink detection](https://user-images.githubusercontent.com/48818645/209196733-8960bf38-5582-4b36-bdb7-d40e6016221d.PNG)
+
+
